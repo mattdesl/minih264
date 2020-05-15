@@ -378,6 +378,9 @@ void H264E_set_vbv_state(
 #elif defined(_WIN32)
 #define __BYTE_ORDER 0
 #define __BIG_ENDIAN 1
+#elif defined(__EMSCRIPTEN__)
+#define __BYTE_ORDER 0
+#define __BIG_ENDIAN 1
 #else
 #error platform not supported
 #endif
