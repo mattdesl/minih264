@@ -7318,7 +7318,7 @@ static void h264e_bs_put_sgolomb(bs_t *bs, int val)
 
 static void h264e_bs_init_bits(bs_t *bs, void *data)
 {
-    bs->origin = data;
+    bs->origin = (bs_item_t*)data;
     bs->buf = bs->origin;
     bs->shift = BS_BITS;
     bs->cache = 0;
