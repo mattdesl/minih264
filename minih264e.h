@@ -342,7 +342,7 @@ void H264E_set_vbv_state(
 #define MINIH264_ONLY_SIMD
 #endif /* SIMD checks... */
 
-#if (defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))) || ((defined(__i386__) || defined(__x86_64__)) && defined(__SSE2__))
+#if (defined(EMSCRIPTEN_SIMD_ENABLED) || (defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))) || ((defined(__i386__) || defined(__x86_64__)) && defined(__SSE2__)))
 #define H264E_ENABLE_SSE2 1
 #if defined(_MSC_VER)
 #include <intrin.h>
@@ -375,12 +375,6 @@ void H264E_set_vbv_state(
 #define __BIG_ENDIAN BIG_ENDIAN
 #elif defined(__OpenBSD__) || defined(__NetBSD__) || defined(__FreeBSD__) || defined(__DragonFly__)
 #include <sys/endian.h>
-#elif defined(_WIN32)
-#define __BYTE_ORDER 0
-#define __BIG_ENDIAN 1
-#elif defined(__EMSCRIPTEN__)
-#define __BYTE_ORDER 0
-#define __BIG_ENDIAN 1
 #else
 #error platform not supported
 #endif
@@ -2327,7 +2321,9 @@ static int h264e_intra_choose_4x4_sse2(const pix_t *blockin, pix_t *blockpred, i
 
 #define MM_LOAD_8TO16(p) _mm_unpacklo_epi8(_mm_loadl_epi64((__m128i*)(p)), zero)
 #define MM_LOAD_REG(p, sh) _mm_unpacklo_epi8(_mm_srli_si128(p, sh), zero)
+#ifndef __inline
 #define __inline
+#endif
 static __inline void copy_wh_sse(const uint8_t *src, int src_stride, uint8_t *h264e_restrict dst, int w, int h)
 {
     assert(h % 4 == 0);
